@@ -41,12 +41,14 @@ public:
 
   void begin();
   void display();
+  void invertDisplay(bool invert) override { _invert = invert; }
 
 private:
   void latch() const;
   void sendCmd(int cmdData);
   void write16(int d);
 
+  bool _invert;
   Adafruit_SPIDevice _spi;
   int8_t _latch = 0;
 };

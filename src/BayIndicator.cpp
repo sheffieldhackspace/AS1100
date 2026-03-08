@@ -29,6 +29,7 @@
 
 BayIndicator::BayIndicator(const int8_t sck, const int8_t mosi, const int8_t latch)
   : GFXcanvas1(192, 9),
+    _invert(false),
     _spi(-1, sck, -1, mosi, 10000000, SPI_BITORDER_MSBFIRST, SPI_MODE3),
     _latch(latch) {
   pinMode(_latch, OUTPUT);
@@ -54,12 +55,12 @@ void BayIndicator::display() {
       uint8_t value = 0;
 
       if (digit > 1) {
-        value |= getPixel(192 - chip * 6 - (digit - 1), 8);
+        value |= getPixel(192 - chip * 6 - (digit - 1), 8) ^ _invert;
       }
 
       for (int i = 0; i < 6; i++) {
         value <<= 1;
-        value |= getPixel(192 - chip * 6 - (i + 1), 8 - (digit + 1));
+        value |= getPixel(192 - chip * 6 - (i + 1), 8 - (digit + 1)) ^ _invert;
       }
 
       write16(((digit + 1) << 8) | value);
